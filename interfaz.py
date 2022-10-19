@@ -23,7 +23,6 @@ class InicioSesion(QMainWindow):
             self.registro.registrar_usuario()
 
 
-
 class Registro(QDialog):
     def __init__(self):
         QDialog.__init__(self)
