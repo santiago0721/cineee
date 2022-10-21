@@ -1,5 +1,7 @@
 from typing import Optional
 
+from excepciones import CuentaExistenteError
+
 
 class Comestible:
     def __init__(self, nombre: str, descripcion: str, cantidad_disponible: int, precio_unitario: float):
@@ -77,14 +79,14 @@ class Cine:
         self.datos_cargados()
 
 
-    def registrar_usuario(self, cedula: str, nombre: str, clave: str)-> bool:
+    def registrar_usuario(self, cedula: str, nombre: str, clave: str):
 
-        if self.buscar_usuario(cedula) is None:
+        if self.buscar_usuario(cedula) is  None:
             usuario = Usuario(cedula, nombre, clave)
             self.usuarios[cedula] = usuario
-            return True
+
         else:
-            return False
+            raise CuentaExistenteError("esta cuenta ya esta registrada")
 
     def buscar_usuario(self, cedula: str) -> Optional[Usuario]:
         if cedula in self.usuarios.keys():

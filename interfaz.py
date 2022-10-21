@@ -1,26 +1,37 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QMessageBox
 
 from cine import Cine
+from excepciones import CuentaExistenteError
 
-
+cine = Cine()
 class InicioSesion(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
         uic.loadUi("gui/inicio.ui", self)
-        self.Cine = Cine()
         self.registro = Registro()
         self.__configurar()
 
 
     def __configurar(self):
-        self.Button_registrarse.clicked.connect(self.registro_ventana)
+        self.Button_registrarse.clicked.connect(self.ssss)
 
+
+    def ssss(self):
+        self.respuesta = self.registro.exec()
     def registro_ventana(self):
-        respuesta = self.registro.exec()
-        if respuesta == QDialog.Accepted:
-            self.registro.registrar_usuario()
+
+        if self.respuesta == QDialog.Accepted:
+            try:
+                self.registro.registrar_usuario()
+            except CuentaExistenteError as err:
+                mensaje_ventana = QMessageBox(self)
+                mensaje_ventana.setWindowTitle("Error")
+                mensaje_ventana.setIcon(QMessageBox.Warning)
+                mensaje_ventana.setText(err.mensaje)
+                mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+                mensaje_ventana.exec()
 
 
 class Registro(QDialog):
@@ -32,15 +43,26 @@ class Registro(QDialog):
 
 
     def __configurar(self):
-        self.Button_ok.clicked.connect(self.registrar_usuario)
-
+        self.Button_ok.accepted.connect("no se como conectar")
 
     def registrar_usuario(self):
-
         cedula = self.Txt_cedula.text()
         nombre = self.Txt_nombre.text()
         clave = self.Txt_contrasena.text()
-        self.Cine.registrar_usuario(cedula, clave, nombre)
+        print(("sss"))
+        Cine.registrar_usuario(cedula, clave, nombre)
+
+    def accept(self) -> None:
+        if self.Txt_cedula.text() != "" and self.Txt_nombre.text() != "" and self.Txt_contrasena.text() != "":
+            super(Registro, self).accept()
+        else:
+            mensaje_ventana = QMessageBox(self)
+            mensaje_ventana.setWindowTitle("Error")
+            mensaje_ventana.setIcon(QMessageBox.Critical)
+            mensaje_ventana.setText("debe llenar todos los datos del formulario")
+            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+            mensaje_ventana.exec()
+
 
 
 
