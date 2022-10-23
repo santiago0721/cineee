@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>menu_principal</class>
+ <widget class="QWidget" name="menu_principal">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>900</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>900</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>900</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Menú Principal</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 0, 4);</string>
+  </property>
+  <widget class="QLabel" name="hhh">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>40</y>
+     <width>411</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Niagara Engraved</family>
+     <pointsize>72</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 0);</string>
+   </property>
+   <property name="text">
+    <string>Menú Principal</string>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>170</y>
+     <width>531</width>
+     <height>501</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string/>
+   </property>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>80</y>
+      <width>241</width>
+      <height>341</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>30</y>
+      <width>241</width>
+      <height>451</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="Button_reservar_p">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(250, 250, 250);
+
+background-color: rgb(217, 2, 5);</string>
+       </property>
+       <property name="text">
+        <string>Reservar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Button_comestibles_p">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(250, 250, 250);
+background-color: rgb(217, 2, 5);</string>
+       </property>
+       <property name="text">
+        <string>Comestibles Disponibles</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Button_agregar_comestible_p">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(250, 250, 250);
+background-color: rgb(217, 2, 5);</string>
+       </property>
+       <property name="text">
+        <string>Agregar Comestible a Bolsa</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Button_ver_bolsa_p">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(250, 250, 250);
+background-color: rgb(217, 2, 5);</string>
+       </property>
+       <property name="text">
+        <string>Ver Bolsa</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Button_comprar_bolsa_p">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(250, 250, 250);
+background-color: rgb(217, 2, 5);</string>
+       </property>
+       <property name="text">
+        <string>Comprar Bolsa</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Button_ver_estadisticas_p">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(250, 250, 250);
+background-color: rgb(217, 2, 5);</string>
+       </property>
+       <property name="text">
+        <string>Ver Estadisticas</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
