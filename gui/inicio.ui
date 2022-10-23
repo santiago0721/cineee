@@ -142,7 +142,7 @@ background-color: rgb(255, 255, 255);</string>
        <string>contraseña</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="Txt_contrasena">
+     <widget class="QLineEdit" name="Txt_clave">
       <property name="geometry">
        <rect>
         <x>80</x>
@@ -150,6 +150,9 @@ background-color: rgb(255, 255, 255);</string>
         <width>331</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="toolTipDuration">
+       <number>-3</number>
       </property>
       <property name="styleSheet">
        <string notr="true">border-radius:10px;
