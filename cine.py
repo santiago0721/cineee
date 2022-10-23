@@ -75,7 +75,7 @@ class Cine:
         self.total_acumulado: float = 0
         self.comestibles: dict[str:Comestible] = {}
         self.usuarios: dict[str: Usuario] = {}
-        self.clave_admin = 10111
+        self.clave_admin = "0721"
         self.usuario_actual: Usuario = Usuario("", "", "")
         self.datos_cargados()
 
@@ -95,7 +95,7 @@ class Cine:
             return None
 
     def iniciar_sesion_usuario(self, cedula: str, clave: str):
-        if cedula == "" and clave == "":
+        if cedula == "" or clave == "":
             raise EspaciosSinRellenar("debe lllenar todos los datos del ingreso")
         if cedula in self.usuarios.keys():
             usuario = self.usuarios[cedula]
@@ -107,11 +107,9 @@ class Cine:
         else:
             raise ContrasenaInvalida("la contraseña no es correcta")
 
-    def iniciar_sesion_admin(self, clave: str) -> bool:
-        if self.clave_admin == clave:
-            return True
-        else:
-            return False
+    def iniciar_sesion_admin(self, clave: str) :
+        if self.clave_admin != clave:
+            raise ContrasenaInvalida("contraseña incorrecta")
 
     def buscar_comestible(self, nombre: str) -> Optional[Comestible]:
         if nombre in self.comestibles.keys():

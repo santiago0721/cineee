@@ -11,6 +11,7 @@ class InicioSesion(QMainWindow):
         QMainWindow.__init__(self)
         uic.loadUi("gui/inicio.ui", self)
         self.registro = Registro()
+        self.Admin = Admin()
         self.cine = Cine()
         self.__configurar()
         self.menu_principal = Principal()
@@ -19,6 +20,7 @@ class InicioSesion(QMainWindow):
     def __configurar(self):
         self.Button_registrarse.clicked.connect(self.abrir_ventana_registro)
         self.Button_ingresar.clicked.connect(self.abrir_ventana_principal)
+        self.Button_admin.clicked.connect(self.inicio_admin)
 
     def abrir_ventana_principal(self):
 
@@ -58,6 +60,21 @@ class InicioSesion(QMainWindow):
 
     def abrir_ventana_registro(self):
         self.registro.exec()
+
+    def inicio_admin(self):
+        if self.Txt_clave.text() != "":
+            try:
+                self.cine.iniciar_sesion_admin(self.Txt_clave.text())
+            except ContrasenaInvalida as err:
+                mensaje_ventana = QMessageBox(self)
+                mensaje_ventana.setWindowTitle("Error")
+                mensaje_ventana.setIcon(QMessageBox.Critical)
+                mensaje_ventana.setText(err.mensaje)
+                mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+                mensaje_ventana.exec()
+
+            else:
+                self.Admin.exec()
 
 
 class Registro(QDialog):
@@ -100,6 +117,12 @@ class Registro(QDialog):
             mensaje_ventana.exec()
 
 
+class Admin(QDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        uic.loadUi("gui/admin.ui",self)
+
+
 class Principal(QDialog):
     def __init__(self):
         QDialog.__init__(self)
@@ -108,6 +131,7 @@ class Principal(QDialog):
 
     def __configurar(self):
         self.Button_reservar_p.clicked.connect("")
+
 
 
 if __name__ == "__main__":
