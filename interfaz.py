@@ -1,5 +1,6 @@
 import sys
 from PyQt5 import uic
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QMessageBox
 
 from cine import Cine
@@ -126,13 +127,21 @@ class Admin(QDialog):
 class Principal(QDialog):
     def __init__(self):
         QDialog.__init__(self)
+        self.cine = Cine()
         uic.loadUi("gui/menu_principal.ui", self)
-        # self.__configurar()
+        self.__configurar()
+        self.__cargar_datos()
 
     def __configurar(self):
-        self.Button_reservar_p.clicked.connect("")
+        self.listView_comestibles.setModel(QStandardItemModel())
 
-
+    def __cargar_datos(self):
+        comestibles = list(self.cine.comestibles.values())
+        for comestible in comestibles:
+            item = QStandardItem(str(comestible))
+            item.comestible = comestible
+            item.setEditable(False)
+            self.listView_comestibles.model().appendRow(item)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

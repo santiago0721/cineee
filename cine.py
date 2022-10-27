@@ -1,12 +1,12 @@
+import csv
 from typing import Optional
 
 from excepciones import *
 
 
 class Comestible:
-    def __init__(self, nombre: str, descripcion: str, cantidad_disponible: int, precio_unitario: float):
+    def __init__(self, nombre: str, cantidad_disponible: int, precio_unitario: float):
         self.nombre: str = nombre
-        self.descripcion: str = descripcion
         self.cantidad_disponible: int = cantidad_disponible
         self.precio_unitario: float = precio_unitario
 
@@ -14,16 +14,16 @@ class Comestible:
         return self.cantidad_disponible >= cantidad
 
     def __str__(self):
-        return self.nombre
+        return f"Producto: {self.nombre}  -  Precio: {self.precio_unitario}  -  C. Disponible: {self.cantidad_disponible}"
 
 
 class Pelicula:
 
-    def __init__(self, nombre: str, duracion: int, genero: str, sinopsis: str):
+    def __init__(self, nombre: str, duracion: int, genero: str):
         self.nombre: str = nombre
         self.duracion: int = duracion
         self.genero: str = genero
-        self.sinopsis: str = sinopsis
+
 
     def __str__(self):
         return self.nombre
@@ -32,10 +32,13 @@ class Pelicula:
 class Sala:
 
     def __init__(self, hora: str, precio_boleta: float, pelicula: Pelicula):
-        self.asientos = []
+        self.asientos =  []
         self.hora: str = hora
         self.precio_boleta: float = precio_boleta
         self.pelicula: Pelicula = pelicula
+
+    def __str__(self):
+        return f"Nombre: {self.pelicula.nombre}- Genero: {self.pelicula.genero}- Duracion: {self.pelicula.duracion} precio boleto: {self.precio_boleta}"
 
 
 class Item:
@@ -77,7 +80,8 @@ class Cine:
         self.usuarios: dict[str: Usuario] = {}
         self.clave_admin = "0721"
         self.usuario_actual: Usuario = Usuario("", "", "")
-        self.datos_cargados()
+        #self.cargar_datos_peliculas()
+        self.cargar_datos_comestibles()
 
     def registrar_usuario(self, cedula: str, nombre: str, clave: str):
 
@@ -147,7 +151,12 @@ class Cine:
         else:
             return False
 
-    def datos_cargados(self):
-        self.comestibles["crispetas"] = Comestible("crispetas", "comestible rapido", 22, 10000)
-        self.comestibles["chocolatina"] = Comestible("chocolatina", "comestible rapido", 20, 6000)
-        self.comestibles["gaseosa"] = Comestible("gaseosa", "bebida", 18, 8000)
+    """def cargar_datos_peliculas(self):
+        with open("datos/peliculas") as file:"""
+
+    def cargar_datos_comestibles(self):
+        with open("datos/comestibles") as file:
+            datos = csv.reader(file, delimiter="|")
+            comestibles = map(lambda data: Comestible(data[0], int(data[1]), float(data[2])), datos)
+            self.comestibles = {comestible.nombre: comestible for comestible in comestibles}
+
