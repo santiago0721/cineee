@@ -1,7 +1,6 @@
-import sys
 from PyQt5 import uic
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
-from PyQt5.QtWidgets import QMainWindow, QApplication, QDialog, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QDialog, QMessageBox, QAbstractItemView, QInputDialog
 
 from cine import Cine
 from excepciones import *
@@ -22,6 +21,10 @@ class InicioSesion(QMainWindow):
         self.Button_registrarse.clicked.connect(self.abrir_ventana_registro)
         self.Button_ingresar.clicked.connect(self.abrir_ventana_principal)
         self.Button_admin.clicked.connect(self.inicio_admin)
+
+    def __limpiar(self):
+        self.Txt_usuario.clear()
+        self.Txt_clave.clear()
 
     def abrir_ventana_principal(self):
 
@@ -46,6 +49,7 @@ class InicioSesion(QMainWindow):
             mensaje_ventana.setText(err.mensaje)
             mensaje_ventana.setStandardButtons(QMessageBox.Ok)
             mensaje_ventana.exec()
+            self.__limpiar()
 
         except ContrasenaInvalida as err:
 
@@ -55,9 +59,11 @@ class InicioSesion(QMainWindow):
             mensaje_ventana.setText(err.mensaje)
             mensaje_ventana.setStandardButtons(QMessageBox.Ok)
             mensaje_ventana.exec()
+            self.Txt_clave.clear()
 
         else:
             self.menu_principal.exec()
+            self.__limpiar()
 
     def abrir_ventana_registro(self):
         self.registro.exec()
@@ -89,6 +95,11 @@ class Registro(QDialog):
         self.Button_ok.accepted.connect(self.registro_ventana)
         self.Button_ok.rejected.connect(self.cerrar)
 
+    def __limpiar(self):
+        self.Txt_cedula.clear()
+        self.Txt_nombre.clear()
+        self.Txt_contrasena.clear()
+
     def cerrar(self):
         pass
 
@@ -99,7 +110,6 @@ class Registro(QDialog):
                 cedula = self.Txt_cedula.text()
                 nombre = self.Txt_nombre.text()
                 clave = self.Txt_contrasena.text()
-                print("se debe mostrar mensaje de cuenta creada")
                 self.principal[0].registrar_usuario(cedula, clave, nombre)
             else:
                 mensaje_ventana = QMessageBox(self)
@@ -116,12 +126,57 @@ class Registro(QDialog):
             mensaje_ventana.setText(err.mensaje)
             mensaje_ventana.setStandardButtons(QMessageBox.Ok)
             mensaje_ventana.exec()
+            self.__limpiar()
+
+        else:
+            self.__limpiar()
+            mensaje_ventana = QMessageBox(self)
+            mensaje_ventana.setWindowTitle(":)")
+            mensaje_ventana.setText("registro exitoso")
+            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+            mensaje_ventana.exec()
 
 
 class Admin(QDialog):
     def __init__(self):
         QDialog.__init__(self)
-        uic.loadUi("gui/admin.ui",self)
+        uic.loadUi("gui/admin.ui", self)
+        self.cine = Cine()
+        self.__configurar()
+
+    def __configurar(self):
+        self.Button_Cargar_comestible.clicked.connect(self.nuevo_comestible)
+
+    def nuevo_comestible(self):
+        nombre = self.Txt_Nombre_comestible.text()
+        cantidad_disponible = self.Txt_Cantidad_disponible.text()
+        precio_unitario = self.Txt_Precio_unitario.text()
+        try:
+            self.cine.agregar_nuevo_comestible(nombre, cantidad_disponible, precio_unitario)
+        except EspaciosSinRellenar as err:
+            mensaje_ventana = QMessageBox(self)
+            mensaje_ventana.setWindowTitle("Error")
+            mensaje_ventana.setIcon(QMessageBox.Warning)
+            mensaje_ventana.setText(err.mensaje)
+            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+            mensaje_ventana.exec()
+        except ValueError:
+            mensaje_ventana = QMessageBox(self)
+            mensaje_ventana.setWindowTitle("Error")
+            mensaje_ventana.setIcon(QMessageBox.Critical)
+            mensaje_ventana.setText("ingrese datos numericos de tipo entero en el campo de cantidad disponible "
+                                    "y datos numericos de cualquier tipo en el ultimo campo")
+            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+            mensaje_ventana.exec()
+
+        else:
+            mensaje_ventana = QMessageBox(self)
+            mensaje_ventana.setWindowTitle(":)")
+            mensaje_ventana.setText("comestible creado ")
+            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+            mensaje_ventana.exec()
+
+
 
 
 class Principal(QDialog):
@@ -133,7 +188,49 @@ class Principal(QDialog):
         self.__cargar_datos()
 
     def __configurar(self):
+        self.Button_agregar_comestible_p.clicked.connect(self.agregra_comestible_a_bolsa)
+        self.Button_eliminar_bolsa_p.clicked.connect(self.eliminar_item)
+
         self.listView_comestibles.setModel(QStandardItemModel())
+
+        table_model = QStandardItemModel()
+        table_model.setHorizontalHeaderLabels(["NOMBRE", "CANT", "TOTAl"])
+        self.tableView.setModel(table_model)
+        self.tableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.tableView.setColumnWidth(0, 150)
+        self.tableView.setColumnWidth(1, 70)
+        self.tableView.setColumnWidth(2, 80)
+
+    def agregra_comestible_a_bolsa(self):
+        cantidad, ok = QInputDialog.getInt(self, "Agregar comestible a bolsa", "Cantidad", 1)
+        if ok:
+            modelo = self.listView_comestibles.model()
+            valor = modelo.itemFromIndex(self.listView_comestibles.selectedIndexes()[0])
+            objeto = self.cine.agregar_comestibles_bolsa(valor.comestible, cantidad)
+
+
+
+            total = "${:,.2f}".format(valor.comestible.precio_unitario * cantidad)
+            celda_1 = QStandardItem(valor.comestible.nombre)
+            celda_2 = QStandardItem(str(cantidad))
+            celda_3 = QStandardItem(total)
+            celda_1.item = objeto
+
+            model = self.tableView.model()
+            model.appendRow([celda_1, celda_2, celda_3])
+            self.total_bolsa()
+
+    def eliminar_item(self):
+        selection_model = self.tableView.selectionModel()
+        modelo = self.tableView.model()
+        row_index = selection_model.selectedIndexes()[0].row()
+        self.cine.eliminar_item(row_index)
+        modelo.removeRow(row_index)
+        self.total_bolsa()
+
+    def total_bolsa(self):
+        total = self.cine.calucular_total()
+        self.lineEdit.setText("${:,.2f}".format(total))
 
     def __cargar_datos(self):
         comestibles = list(self.cine.comestibles.values())
@@ -143,8 +240,3 @@ class Principal(QDialog):
             item.setEditable(False)
             self.listView_comestibles.model().appendRow(item)
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    inicio = InicioSesion()
-    inicio.show()
-    sys.exit(app.exec())

@@ -14,7 +14,7 @@ class Comestible:
         return self.cantidad_disponible >= cantidad
 
     def __str__(self):
-        return f"Producto: {self.nombre}  -  Precio: {self.precio_unitario}  -  C. Disponible: {self.cantidad_disponible}"
+        return f"Producto: {self.nombre} - Precio: {self.precio_unitario} - C. Disponible: {self.cantidad_disponible}"
 
 
 class Pelicula:
@@ -47,6 +47,8 @@ class Item:
         self.cantidad: int = cantidad
         self.total_item = 0
 
+
+
     def __str__(self):
         return f"NOMBRE = {self.producto}       CANTIDAD = {self.cantidad}"
 
@@ -59,6 +61,9 @@ class Bolsa:
     def agregar_item(self, producto, cantidad):
         item = Item(producto, cantidad)
         self.items.append(item)
+        return item
+
+
 
 
 class Usuario:
@@ -78,6 +83,7 @@ class Cine:
         self.total_acumulado: float = 0
         self.comestibles: dict[str:Comestible] = {}
         self.usuarios: dict[str: Usuario] = {}
+        self.peliculas: dict[str: Pelicula] = {}
         self.clave_admin = "0721"
         self.usuario_actual: Usuario = Usuario("", "", "")
         #self.cargar_datos_peliculas()
@@ -111,29 +117,15 @@ class Cine:
         else:
             raise ContrasenaInvalida("la contraseña no es correcta")
 
-    def iniciar_sesion_admin(self, clave: str) :
+    def iniciar_sesion_admin(self, clave: str):
         if self.clave_admin != clave:
             raise ContrasenaInvalida("contraseña incorrecta")
 
-    def buscar_comestible(self, nombre: str) -> Optional[Comestible]:
-        if nombre in self.comestibles.keys():
-            return self.comestibles[nombre]
-        else:
-            return None
 
-    def agregar_comestibles_bolsa(self, nombre: str, cantidad: int) -> int:
+    def agregar_comestibles_bolsa(self, comestible, cantidad: int):
 
-        comestible = self.buscar_comestible(nombre)
+        return self.usuario_actual.agregar_comestible_bolsa(comestible, cantidad)
 
-        if comestible is not None:
-            if comestible.unidades_disponibles(cantidad):
-
-                self.usuario_actual.agregar_comestible_bolsa(comestible, cantidad)
-                return 0
-            else:
-                return 1
-        else:
-            return 2
 
     def mostrar_items_bolsa(self):
         return self.usuario_actual.bolsa.items
@@ -144,19 +136,39 @@ class Cine:
             lista.append(objeto)
         return lista
 
-    def eliminar_item(self, indice: int) -> bool:
-        if (indice > 0) and (indice <= len(self.usuario_actual.bolsa.items)):
-            self.usuario_actual.bolsa.items.pop(indice-1)
-            return True
-        else:
-            return False
+    def eliminar_item(self, indice: int):
+        self.usuario_actual.bolsa.items.pop(indice)
 
-    """def cargar_datos_peliculas(self):
-        with open("datos/peliculas") as file:"""
+    def calucular_total(self):
+        total = 0
+        for objeto in self.usuario_actual.bolsa.items:
+            total += objeto.cantidad * objeto.producto.precio_unitario
+        return total
 
+
+    def cargar_datos_peliculas(self):
+        with open("datos/peliculas", encoding="utf8") as file:
+            datos = csv.reader(file, delimiter="|")
+            peliculas = map(lambda data: Comestible(data[0], data[1], data[2]), datos)
+            self.peliculas = {pelicula.nombre: pelicula for pelicula in peliculas}
     def cargar_datos_comestibles(self):
-        with open("datos/comestibles") as file:
+        with open("datos/comestibles", encoding="utf8") as file:
             datos = csv.reader(file, delimiter="|")
             comestibles = map(lambda data: Comestible(data[0], int(data[1]), float(data[2])), datos)
             self.comestibles = {comestible.nombre: comestible for comestible in comestibles}
+
+    def guardar_nuevo_comestible(self,nombre:str,cantidad_disponible:int, precio_unitario:float):
+        with open ("datos/comestibles", encoding="utf8", mode="a") as file:
+            file.write(f"\n{nombre}|{cantidad_disponible}|{precio_unitario}")
+
+    def agregar_nuevo_comestible(self,nombre:str,cantidad_disponible:str, precio_unitario:str):
+        if nombre == "" or cantidad_disponible == "" or precio_unitario == "":
+            raise EspaciosSinRellenar("debe lllenar todos los datos")
+
+        else:
+            self.guardar_nuevo_comestible(nombre, int(cantidad_disponible), float(precio_unitario))
+
+
+
+
 
