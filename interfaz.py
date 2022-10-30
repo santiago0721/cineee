@@ -111,6 +111,13 @@ class Registro(QDialog):
                 nombre = self.Txt_nombre.text()
                 clave = self.Txt_contrasena.text()
                 self.principal[0].registrar_usuario(cedula, clave, nombre)
+                self.__limpiar()
+
+                mensaje_ventana = QMessageBox(self)
+                mensaje_ventana.setWindowTitle(":)")
+                mensaje_ventana.setText("registro exitoso")
+                mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+                mensaje_ventana.exec()
             else:
                 mensaje_ventana = QMessageBox(self)
                 mensaje_ventana.setWindowTitle("Error")
@@ -128,13 +135,7 @@ class Registro(QDialog):
             mensaje_ventana.exec()
             self.__limpiar()
 
-        else:
-            self.__limpiar()
-            mensaje_ventana = QMessageBox(self)
-            mensaje_ventana.setWindowTitle(":)")
-            mensaje_ventana.setText("registro exitoso")
-            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
-            mensaje_ventana.exec()
+
 
 
 class Admin(QDialog):
@@ -143,9 +144,16 @@ class Admin(QDialog):
         uic.loadUi("gui/admin.ui", self)
         self.cine = Cine()
         self.__configurar()
+        self.__cargar_datos()
 
     def __configurar(self):
         self.Button_Cargar_comestible.clicked.connect(self.nuevo_comestible)
+
+        self.listView_.setModel(QStandardItemModel())
+
+        self.Button_Crear_sala.clicked.connect(self.crear_sala)
+
+
 
     def nuevo_comestible(self):
         nombre = self.Txt_Nombre_comestible.text()
@@ -177,6 +185,22 @@ class Admin(QDialog):
             mensaje_ventana.exec()
 
 
+    def __cargar_datos(self):
+        peliculas = list(self.cine.peliculas.values())
+        for pelicula in peliculas:
+            item = QStandardItem(str(pelicula))
+            item.pelicula = pelicula
+            item.setEditable(False)
+            self.listView_.model().appendRow(item)
+
+    def crear_sala(self):
+        modelo = self.listView_.model()
+        valor = modelo.itemFromIndex(self.listView_.selectedIndexes()[0])
+        hora = self.Txt_hora.text()
+        precio_boleta = self.Txt_Precio_boleta.text()
+        self.cine.crear_sala(hora, precio_boleta, valor.pelicula)
+        print("ssss")
+
 
 
 class Principal(QDialog):
@@ -204,21 +228,24 @@ class Principal(QDialog):
     def agregra_comestible_a_bolsa(self):
         cantidad, ok = QInputDialog.getInt(self, "Agregar comestible a bolsa", "Cantidad", 1)
         if ok:
-            modelo = self.listView_comestibles.model()
-            valor = modelo.itemFromIndex(self.listView_comestibles.selectedIndexes()[0])
-            objeto = self.cine.agregar_comestibles_bolsa(valor.comestible, cantidad)
+            try:
+                modelo = self.listView_comestibles.model()
+                valor = modelo.itemFromIndex(self.listView_comestibles.selectedIndexes()[0])
+                objeto = self.cine.agregar_comestibles_bolsa(valor.comestible, cantidad)
 
+            except IndexError:
+                print("mensaje de que debe seleccionar un objeto")
 
+            else:
+                total = "${:,.2f}".format(valor.comestible.precio_unitario * cantidad)
+                celda_1 = QStandardItem(valor.comestible.nombre)
+                celda_2 = QStandardItem(str(cantidad))
+                celda_3 = QStandardItem(total)
+                celda_1.item = objeto
 
-            total = "${:,.2f}".format(valor.comestible.precio_unitario * cantidad)
-            celda_1 = QStandardItem(valor.comestible.nombre)
-            celda_2 = QStandardItem(str(cantidad))
-            celda_3 = QStandardItem(total)
-            celda_1.item = objeto
-
-            model = self.tableView.model()
-            model.appendRow([celda_1, celda_2, celda_3])
-            self.total_bolsa()
+                model = self.tableView.model()
+                model.appendRow([celda_1, celda_2, celda_3])
+                self.total_bolsa()
 
     def eliminar_item(self):
         selection_model = self.tableView.selectionModel()

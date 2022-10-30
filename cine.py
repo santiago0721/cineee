@@ -14,19 +14,27 @@ class Comestible:
         return self.cantidad_disponible >= cantidad
 
     def __str__(self):
-        return f"Producto: {self.nombre} - Precio: {self.precio_unitario} - C. Disponible: {self.cantidad_disponible}"
+        return f"Producto: {self.nombre} - Precio: {self.precio_unitario} "
 
 
 class Pelicula:
 
     def __init__(self, nombre: str, duracion: int, genero: str):
+
+        self.salas: [Pelicula] = []
         self.nombre: str = nombre
         self.duracion: int = duracion
         self.genero: str = genero
 
 
     def __str__(self):
-        return self.nombre
+        return f"Nombre: {self.nombre} ----- Duracion: {self.duracion} ----- Genero: {self.genero}"
+
+
+    def crear_sala(self,hora, precio_boleta):
+        sala = Sala(hora,precio_boleta,self)
+        self.salas.append(sala)
+
 
 
 class Sala:
@@ -34,11 +42,11 @@ class Sala:
     def __init__(self, hora: str, precio_boleta: float, pelicula: Pelicula):
         self.asientos =  []
         self.hora: str = hora
-        self.precio_boleta: float = precio_boleta
+        self.precio_unitario: float = precio_boleta
         self.pelicula: Pelicula = pelicula
 
     def __str__(self):
-        return f"Nombre: {self.pelicula.nombre}- Genero: {self.pelicula.genero}- Duracion: {self.pelicula.duracion} precio boleto: {self.precio_boleta}"
+        return f"Nombre: {self.pelicula.nombre}- Genero: {self.pelicula.genero}- Duracion: {self.pelicula.duracion} precio boleto: {self.precio_unitario}"
 
 
 class Item:
@@ -86,14 +94,16 @@ class Cine:
         self.peliculas: dict[str: Pelicula] = {}
         self.clave_admin = "0721"
         self.usuario_actual: Usuario = Usuario("", "", "")
-        #self.cargar_datos_peliculas()
+        self.cargar_datos_peliculas()
         self.cargar_datos_comestibles()
+        self.cargar_datos_usuarios()
 
     def registrar_usuario(self, cedula: str, nombre: str, clave: str):
 
         if self.buscar_usuario(cedula) is None:
             usuario = Usuario(cedula, nombre, clave)
             self.usuarios[cedula] = usuario
+            self.agregar_usuario_archivo(cedula, nombre, clave)
 
         else:
             raise CuentaExistenteError("esta cuenta ya esta registrada")
@@ -149,7 +159,7 @@ class Cine:
     def cargar_datos_peliculas(self):
         with open("datos/peliculas", encoding="utf8") as file:
             datos = csv.reader(file, delimiter="|")
-            peliculas = map(lambda data: Comestible(data[0], data[1], data[2]), datos)
+            peliculas = map(lambda data: Pelicula(data[0], data[1], data[2]), datos)
             self.peliculas = {pelicula.nombre: pelicula for pelicula in peliculas}
     def cargar_datos_comestibles(self):
         with open("datos/comestibles", encoding="utf8") as file:
@@ -167,6 +177,20 @@ class Cine:
 
         else:
             self.guardar_nuevo_comestible(nombre, int(cantidad_disponible), float(precio_unitario))
+
+    def cargar_datos_usuarios(self):
+        with open("datos/usuarios", encoding="utf8") as file:
+            datos = csv.reader(file, delimiter="|")
+            usuarios = map(lambda data: Usuario(data[0], data[1], data[2]), datos)
+            self.usuarios = {usuario.clave: usuario for usuario in usuarios}
+
+    def agregar_usuario_archivo(self, cedula: str, nombre: str, clave: str):
+        with open ("datos/usuarios", encoding="utf8", mode="a") as file:
+            file.write(f"\n{cedula}|{nombre}|{clave}")
+
+    def crear_sala(self, hora, precio_boleta, pelicula:Pelicula):
+        pelicula.crear_sala(hora, precio_boleta)
+
 
 
 

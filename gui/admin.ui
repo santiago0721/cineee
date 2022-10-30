@@ -31,9 +31,9 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>30</y>
-     <width>521</width>
+     <x>350</x>
+     <y>50</y>
+     <width>201</width>
      <height>91</height>
     </rect>
    </property>
@@ -54,21 +54,37 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>120</y>
-     <width>481</width>
-     <height>181</height>
+     <x>20</x>
+     <y>200</y>
+     <width>391</width>
+     <height>191</height>
     </rect>
    </property>
    <property name="title">
     <string>cargar nueva pelicula</string>
    </property>
+   <widget class="QPushButton" name="Button_Cargar_pelicula">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>140</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(198, 2, 5);</string>
+    </property>
+    <property name="text">
+     <string>Cargar</string>
+    </property>
+   </widget>
    <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>431</width>
+      <x>10</x>
+      <y>30</y>
+      <width>361</width>
       <height>101</height>
      </rect>
     </property>
@@ -86,18 +102,6 @@
        </property>
        <property name="text">
         <string>Nombre</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="Txt_Nombre_pelicula_2">
-       <property name="styleSheet">
-        <string notr="true">border-radius:10px;
-
-background-color: rgb(255, 255, 255);</string>
-       </property>
-       <property name="text">
-        <string/>
        </property>
       </widget>
      </item>
@@ -142,31 +146,27 @@ background-color: rgb(255, 255, 255);</string>
        </property>
       </widget>
      </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="Txt_Nombre_pelicula_2">
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;
+
+background-color: rgb(255, 255, 255);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
     </layout>
-   </widget>
-   <widget class="QPushButton" name="Button_Cargar_pelicula">
-    <property name="geometry">
-     <rect>
-      <x>190</x>
-      <y>130</y>
-      <width>91</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(198, 2, 5);</string>
-    </property>
-    <property name="text">
-     <string>Cargar</string>
-    </property>
    </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_2">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>340</y>
-     <width>481</width>
+     <x>440</x>
+     <y>200</y>
+     <width>411</width>
      <height>191</height>
     </rect>
    </property>
@@ -178,7 +178,7 @@ background-color: rgb(255, 255, 255);</string>
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>431</width>
+      <width>391</width>
       <height>121</height>
      </rect>
     </property>
@@ -189,38 +189,7 @@ background-color: rgb(255, 255, 255);</string>
      <enum>QFrame::Raised</enum>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Cedula&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Nombre</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLineEdit" name="Txt_Nombre_comestible">
-       <property name="styleSheet">
-        <string notr="true">border-radius:10px;
-
-background-color: rgb(255, 255, 255);</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="Txt_Cantidad_disponible">
-       <property name="styleSheet">
-        <string notr="true">border-radius:10px;
-
-background-color: rgb(255, 255, 255);</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
+     <item row="3" column="2">
       <widget class="QLineEdit" name="Txt_Precio_unitario">
        <property name="styleSheet">
         <string notr="true">border-radius:10px;
@@ -232,23 +201,54 @@ background-color: rgb(255, 255, 255);</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-       <property name="text">
-        <string>Precio unitario</string>
+     <item row="2" column="2">
+      <widget class="QLineEdit" name="Txt_Cantidad_disponible">
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;
+
+background-color: rgb(255, 255, 255);</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0" colspan="2">
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="Txt_Nombre_comestible">
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;
+
+background-color: rgb(255, 255, 255);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="2">
       <widget class="QLabel" name="label_6">
        <property name="whatsThis">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>Cantidad disponible</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Cedula&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Nombre</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Precio unitario</string>
        </property>
       </widget>
      </item>
@@ -270,6 +270,107 @@ background-color: rgb(255, 255, 255);</string>
      <string>Cargar</string>
     </property>
    </widget>
+  </widget>
+  <widget class="QGroupBox" name="groupBox_3">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>430</y>
+     <width>351</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>crear nueva sala</string>
+   </property>
+   <widget class="QPushButton" name="Button_Crear_sala">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>130</y>
+      <width>91</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(198, 2, 5);</string>
+    </property>
+    <property name="text">
+     <string>crear</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="frame_3">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>30</y>
+      <width>281</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="Txt_hora">
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;
+
+background-color: rgb(255, 255, 255);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="Txt_Precio_boleta">
+       <property name="styleSheet">
+        <string notr="true">border-radius:10px;
+
+background-color: rgb(255, 255, 255);</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;Cedula&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::RightToLeft</enum>
+       </property>
+       <property name="text">
+        <string>hora</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>precio boleta</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QListView" name="listView_">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>440</y>
+     <width>461</width>
+     <height>191</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>
