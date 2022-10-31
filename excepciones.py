@@ -21,3 +21,8 @@ class ContrasenaInvalida(CineError):
 class EspaciosSinRellenar(CineError):
     def __init__(self, mensaje):
         super().__init__(mensaje)
+
+
+class NoEsNumero(CineError):
+    def __init__(self, mensaje):
+        super().__init__(mensaje)

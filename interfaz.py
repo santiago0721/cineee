@@ -194,12 +194,48 @@ class Admin(QDialog):
             self.listView_.model().appendRow(item)
 
     def crear_sala(self):
-        modelo = self.listView_.model()
-        valor = modelo.itemFromIndex(self.listView_.selectedIndexes()[0])
-        hora = self.Txt_hora.text()
-        precio_boleta = self.Txt_Precio_boleta.text()
-        self.cine.crear_sala(hora, precio_boleta, valor.pelicula)
-        print("ssss")
+        try:
+            modelo = self.listView_.model()
+            valor = modelo.itemFromIndex(self.listView_.selectedIndexes()[0])
+            hora = self.Txt_hora.text()
+            precio_boleta = float(self.Txt_Precio_boleta.text())
+            self.cine.crear_sala(hora, precio_boleta, valor.pelicula)
+
+        except EspaciosSinRellenar as err:
+            mensaje_ventana = QMessageBox(self)
+            mensaje_ventana.setWindowTitle("Error")
+            mensaje_ventana.setIcon(QMessageBox.Critical)
+            mensaje_ventana.setText(err.mensaje)
+            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+            mensaje_ventana.exec()
+        except IndexError:
+            mensaje_ventana = QMessageBox(self)
+            mensaje_ventana.setWindowTitle("Error")
+            mensaje_ventana.setIcon(QMessageBox.Critical)
+            mensaje_ventana.setText("debe seleccionar una pelicula")
+            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+            mensaje_ventana.exec()
+
+        except ValueError:
+            mensaje_ventana = QMessageBox(self)
+            mensaje_ventana.setWindowTitle("Error")
+            mensaje_ventana.setIcon(QMessageBox.Critical)
+            mensaje_ventana.setText("debe ingresar un valor numerico en : Precio boleta")
+            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+            mensaje_ventana.exec()
+
+
+        else:
+            self.Txt_hora.clear()
+            self.Txt_Precio_boleta.clear()
+            mensaje_ventana = QMessageBox(self)
+            mensaje_ventana.setWindowTitle(":)")
+            mensaje_ventana.setText("sala creada")
+            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+            mensaje_ventana.exec()
+
+
+
 
 
 
@@ -216,6 +252,8 @@ class Principal(QDialog):
         self.Button_eliminar_bolsa_p.clicked.connect(self.eliminar_item)
 
         self.listView_comestibles.setModel(QStandardItemModel())
+
+        self.listView_peliculas.setModel(QStandardItemModel())
 
         table_model = QStandardItemModel()
         table_model.setHorizontalHeaderLabels(["NOMBRE", "CANT", "TOTAl"])
@@ -266,4 +304,18 @@ class Principal(QDialog):
             item.comestible = comestible
             item.setEditable(False)
             self.listView_comestibles.model().appendRow(item)
+
+        peliculas = list(self.cine.peliculas.values())
+        for pelicula in peliculas:
+            for sala in pelicula.salas:
+                objeto = QStandardItem(str(sala))
+                objeto.sala = sala
+                objeto.setEditable(False)
+                self.listView_peliculas.model().appendRow(objeto)
+
+
+
+
+
+
 

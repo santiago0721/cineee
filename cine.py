@@ -19,11 +19,11 @@ class Comestible:
 
 class Pelicula:
 
-    def __init__(self, nombre: str, duracion: int, genero: str):
+    def __init__(self, nombre: str, duracion: str, genero: str):
 
         self.salas: [Pelicula] = []
         self.nombre: str = nombre
-        self.duracion: int = duracion
+        self.duracion: str = duracion
         self.genero: str = genero
 
 
@@ -32,8 +32,9 @@ class Pelicula:
 
 
     def crear_sala(self,hora, precio_boleta):
-        sala = Sala(hora,precio_boleta,self)
+        sala = Sala(hora, precio_boleta, self)
         self.salas.append(sala)
+
 
 
 
@@ -97,6 +98,7 @@ class Cine:
         self.cargar_datos_peliculas()
         self.cargar_datos_comestibles()
         self.cargar_datos_usuarios()
+        self.cargar_datos_salas()
 
     def registrar_usuario(self, cedula: str, nombre: str, clave: str):
 
@@ -184,12 +186,37 @@ class Cine:
             usuarios = map(lambda data: Usuario(data[0], data[1], data[2]), datos)
             self.usuarios = {usuario.clave: usuario for usuario in usuarios}
 
+    def cargar_datos_salas(self):
+        with open("datos/salas", encoding="utf8") as file:
+            for linea in file:
+                info = linea.split("|")
+                pelicula = Pelicula(info[2], info[3], info[4])
+                self.peliculas[info[2]].salas.append(Sala(info[0], float(info[1]), pelicula))
+
+                #mejorarlo por que por ahora sobre escribe el mismo objeto en el diccionario
+
+
     def agregar_usuario_archivo(self, cedula: str, nombre: str, clave: str):
         with open ("datos/usuarios", encoding="utf8", mode="a") as file:
             file.write(f"\n{cedula}|{nombre}|{clave}")
 
+    def agregar_sala_archivo(self,hora, precio_boleta, pelicula:Pelicula):
+        with open ("datos/salas", encoding="utf8", mode="a") as file:
+            file.write(f"\n{hora}|{precio_boleta}|{pelicula.nombre}|{pelicula.duracion}|{pelicula.genero}")
+
     def crear_sala(self, hora, precio_boleta, pelicula:Pelicula):
-        pelicula.crear_sala(hora, precio_boleta)
+        if hora == "" or precio_boleta == "":
+            raise EspaciosSinRellenar("debe llenar todos los espacios")
+
+        else:
+            pelicula.crear_sala(hora, precio_boleta)
+            self.agregar_sala_archivo(hora, precio_boleta, pelicula)
+
+
+
+
+
+
 
 
 
