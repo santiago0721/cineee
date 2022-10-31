@@ -189,7 +189,7 @@ class Cine:
     def cargar_datos_salas(self):
         with open("datos/salas", encoding="utf8") as file:
             for linea in file:
-                info = linea.split("|")
+                info = linea.split("|")#hacer un for para comparar con el nombre cual peli es y obtener la peli
                 pelicula = Pelicula(info[2], info[3], info[4])
                 self.peliculas[info[2]].salas.append(Sala(info[0], float(info[1]), pelicula))
 
