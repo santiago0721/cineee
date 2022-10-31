@@ -267,12 +267,19 @@ class Principal(QDialog):
         cantidad, ok = QInputDialog.getInt(self, "Agregar comestible a bolsa", "Cantidad", 1)
         if ok:
             try:
+
                 modelo = self.listView_comestibles.model()
                 valor = modelo.itemFromIndex(self.listView_comestibles.selectedIndexes()[0])
                 objeto = self.cine.agregar_comestibles_bolsa(valor.comestible, cantidad)
 
             except IndexError:
-                print("mensaje de que debe seleccionar un objeto")
+
+                mensaje_ventana = QMessageBox(self)
+                mensaje_ventana.setWindowTitle("Error")
+                mensaje_ventana.setIcon(QMessageBox.Warning)
+                mensaje_ventana.setText("debe seleccionar un comestible")
+                mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+                mensaje_ventana.exec()
 
             else:
                 total = "${:,.2f}".format(valor.comestible.precio_unitario * cantidad)
@@ -286,12 +293,20 @@ class Principal(QDialog):
                 self.total_bolsa()
 
     def eliminar_item(self):
-        selection_model = self.tableView.selectionModel()
-        modelo = self.tableView.model()
-        row_index = selection_model.selectedIndexes()[0].row()
-        self.cine.eliminar_item(row_index)
-        modelo.removeRow(row_index)
-        self.total_bolsa()
+        try:
+            selection_model = self.tableView.selectionModel()
+            modelo = self.tableView.model()
+            row_index = selection_model.selectedIndexes()[0].row()
+            self.cine.eliminar_item(row_index)
+            modelo.removeRow(row_index)
+            self.total_bolsa()
+        except IndexError:
+            mensaje_ventana = QMessageBox(self)
+            mensaje_ventana.setWindowTitle("Error")
+            mensaje_ventana.setIcon(QMessageBox.Warning)
+            mensaje_ventana.setText("debe seleccionar un item")
+            mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+            mensaje_ventana.exec()
 
     def total_bolsa(self):
         total = self.cine.calucular_total()
