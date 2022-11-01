@@ -59,7 +59,7 @@ class Item:
 
 
     def __str__(self):
-        return f"NOMBRE = {self.producto}       CANTIDAD = {self.cantidad}"
+        return f"NOMBRE = {self.producto}      CANTIDAD = {self.cantidad}"
 
 
 class Bolsa:

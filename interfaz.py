@@ -382,7 +382,7 @@ class Principal(QDialog):
         self.cine.descontar_unidades()
 
 
-    def estadisticas(self):#
+    def estadisticas(self):
         mensaje = self.cine.estadisticas()
         mensaje_ventana = QMessageBox(self)
         mensaje_ventana.setWindowTitle("Estadisticas")
