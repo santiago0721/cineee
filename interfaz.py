@@ -415,7 +415,8 @@ class Principal(QDialog):
 
 
     def abrir_comprar_bolsa(self):
-        total = self.cine.calucular_total()
+        self.vaciar_bolsa()
+        total = self.cine.comprar_bolsa()
         mensaje = self.cine.mensaje_descuento(total)
         mensaje_ventana = QMessageBox(self)
         mensaje_ventana.setWindowTitle("COMPRA")
@@ -423,8 +424,10 @@ class Principal(QDialog):
         mensaje_ventana.setStandardButtons(QMessageBox.Ok)
         mensaje_ventana.exec()
         self.cine.descontar_unidades()
-        self.vaciar_bolsa()
         self.lineEdit.setText("")
+
+
+
 
 
 

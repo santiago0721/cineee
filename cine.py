@@ -183,6 +183,10 @@ class Cine:
     def eliminar_item(self, indice: int):
         self.usuario_actual.eliminar_item_bolsa(indice)
 
+    def comprar_bolsa(self):
+        total= self.calucular_total()
+        self.usuario_actual.vaciar_bolsa()
+        return total
 
     def calucular_total(self):
         total = self.usuario_actual.total()
@@ -255,7 +259,7 @@ class Cine:
         else:
             return 10, total * 0.9
     def mensaje_descuento(self, total):
-        if total > 90000:
+        if total >= 90000:
             cantidad, valor = self.descuento(total)
             return f""" 
             el valor total de la compra es de {total} 
@@ -266,7 +270,7 @@ class Cine:
 
     def descontar_unidades(self):
         self.usuario_actual.items_bolsa()
-        print(self.usuario_actual.bolsa.items)
+
 
     def vaciar_bolsa(self):
         self.usuario_actual.vaciar_bolsa()
