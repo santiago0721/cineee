@@ -273,6 +273,7 @@ class Principal(QDialog):
     def __configurar(self):
         self.Button_agregar_comestible_p.clicked.connect(self.agregra_comestible_a_bolsa)
         self.Button_eliminar_bolsa_p.clicked.connect(self.eliminar_item)
+        self.Button_ver_estadisticas_p.clicked.connect(self.estadisticas)
         self.Button_comprar_bolsa_p.clicked.connect(self.abrir_comprar_bolsa)
         self.listView_comestibles.setModel(QStandardItemModel())
 
@@ -362,7 +363,15 @@ class Principal(QDialog):
                 objeto.setEditable(False)
                 self.listView_peliculas.model().appendRow(objeto)
 
+    def vaciar_bolsa(self):
+
+        selection_model = self.tableView.selectionModel()
+        modelo = self.tableView.model()
+        for indice in self.cine.usuario_actual.bolsa.items:
+            modelo.removeRow(0)
+
     def abrir_comprar_bolsa(self):
+        self.vaciar_bolsa()
         total = self.cine.calucular_total()
         mensaje = self.cine.mensaje_descuento(total)
         mensaje_ventana = QMessageBox(self)
@@ -371,6 +380,23 @@ class Principal(QDialog):
         mensaje_ventana.setStandardButtons(QMessageBox.Ok)
         mensaje_ventana.exec()
         self.cine.descontar_unidades()
+
+
+    def estadisticas(self):
+        mensaje = self.cine.estadisticas()
+        mensaje_ventana = QMessageBox(self)
+        mensaje_ventana.setWindowTitle("Estadisticas")
+        mensaje_ventana.setText(f"""
+        comestible mas caro = {mensaje[0][0]} su precio es {mensaje[0][1]}
+        comestible mas barato = {mensaje[1][0]} su precio es {mensaje[1][1]}       
+
+""")
+        mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+        mensaje_ventana.exec()
+        self.cine.descontar_unidades()
+
+
+
 
 
 

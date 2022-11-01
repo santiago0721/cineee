@@ -85,6 +85,9 @@ class Bolsa:
         for item in self.items:
             item.producto.cantidad_disponible -= item.cantidad
 
+    def vaciar_bolsa(self):
+        self.items.clear()
+
 class Usuario:
     def __init__(self, cedula: str, nombre: str, clave: str):
         self.cedula: str = cedula
@@ -103,6 +106,9 @@ class Usuario:
 
     def items_bolsa(self):
         self.bolsa.descontar_items_bolsa()
+
+    def vaciar_bolsa(self):
+        self.bolsa.vaciar_bolsa()
 
 class Cine:
 
@@ -249,7 +255,33 @@ class Cine:
 
     def descontar_unidades(self):
         self.usuario_actual.items_bolsa()
+        print(self.usuario_actual.bolsa.items)
 
+
+    def vaciar_bolsa(self):
+        self.usuario_actual.vaciar_bolsa()
+
+    def comestible_mas_caro(self):
+        comestibles = list(self.comestibles.values())
+        mas_caro = comestibles[0]
+        for comestible in comestibles:
+            if mas_caro.precio_unitario < comestible.precio_unitario:
+                mas_caro = comestible
+        return mas_caro
+
+    def comestible_mas_barato(self):
+        comestibles = list(self.comestibles.values())
+        mas_barato = comestibles[0]
+        for comestible in comestibles:
+            if mas_barato.precio_unitario > comestible.precio_unitario:
+                mas_barato = comestible
+        return mas_barato
+
+    def estadisticas(self):
+
+        comestible_mas_caro = self.comestible_mas_caro()
+        comestible_mas_barato = self.comestible_mas_barato()
+        return (comestible_mas_caro.nombre, comestible_mas_caro.precio_unitario),(comestible_mas_caro.nombre, comestible_mas_barato.precio_unitario)
 
 
 
