@@ -84,7 +84,6 @@ class Bolsa:
     def descontar_items_bolsa(self):
         for item in self.items:
             item.producto.cantidad_disponible -= item.cantidad
-            print(item.producto.cantidad_disponible)
 
 class Usuario:
     def __init__(self, cedula: str, nombre: str, clave: str):
