@@ -275,6 +275,7 @@ class Principal(QDialog):
         self.Button_eliminar_bolsa_p.clicked.connect(self.eliminar_item)
         self.Button_ver_estadisticas_p.clicked.connect(self.estadisticas)
         self.Button_comprar_bolsa_p.clicked.connect(self.abrir_comprar_bolsa)
+        self.Button_reservar_p.clicked.connect(self.reservar)
         self.listView_comestibles.setModel(QStandardItemModel())
 
         self.listView_peliculas.setModel(QStandardItemModel())
@@ -312,6 +313,7 @@ class Principal(QDialog):
                 mensaje_ventana.setWindowTitle("Error")
                 mensaje_ventana.setIcon(QMessageBox.Warning)
                 mensaje_ventana.setText(err.mensaje)
+
                 mensaje_ventana.setStandardButtons(QMessageBox.Ok)
                 mensaje_ventana.exec()
 
@@ -326,6 +328,48 @@ class Principal(QDialog):
                 model = self.tableView.model()
                 model.appendRow([celda_1, celda_2, celda_3])
                 self.total_bolsa()
+
+    def reservar(self):
+        cantidad, ok = QInputDialog.getInt(self, "Agregar funcion a bolsa", "Cantidad", 1)
+
+        if ok:
+            try:
+
+                modelo = self.listView_peliculas.model()
+                valor = modelo.itemFromIndex(self.listView_peliculas.selectedIndexes()[0])
+                objeto = self.cine.agregar_sala_bolsa(valor.sala, cantidad)
+
+            except IndexError:
+
+                mensaje_ventana = QMessageBox(self)
+                mensaje_ventana.setWindowTitle("Error")
+                mensaje_ventana.setIcon(QMessageBox.Warning)
+                mensaje_ventana.setText("debe seleccionar un comestible")
+                mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+                mensaje_ventana.exec()
+
+            except CantidadNoDisponible as err:
+
+                mensaje_ventana = QMessageBox(self)
+                mensaje_ventana.setWindowTitle("Error")
+                mensaje_ventana.setIcon(QMessageBox.Warning)
+                mensaje_ventana.setText(err.mensaje)
+
+                mensaje_ventana.setStandardButtons(QMessageBox.Ok)
+                mensaje_ventana.exec()
+
+
+            else:
+                total = "${:,.2f}".format(valor.sala.precio_unitario * cantidad)
+                celda_1 = QStandardItem(valor.sala.pelicula.nombre)
+                celda_2 = QStandardItem(str(cantidad))
+                celda_3 = QStandardItem(total)
+                celda_1.item = objeto
+
+                model = self.tableView.model()
+                model.appendRow([celda_1, celda_2, celda_3])
+                self.total_bolsa()
+
 
     def eliminar_item(self):
         try:

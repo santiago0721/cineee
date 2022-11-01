@@ -98,6 +98,8 @@ class Usuario:
     def agregar_comestible_bolsa(self, comestible: Comestible, cantidad: int):
         self.bolsa.agregar_item(comestible, cantidad)
 
+    def agregar_sala_bolsa(self, sala, cantidad):
+        self.bolsa.agregar_item(sala, cantidad)
     def total(self):
         return self.bolsa.total()
 
@@ -164,6 +166,12 @@ class Cine:
         else:
             raise CantidadNoDisponible("no se puede agregar esta cantidad del producto solo "
                                        f"hay {comestible.cantidad_disponible} unidades disponibles")
+    def agregar_sala_bolsa(self, sala, cantidad: int):
+        if sala.cantidad_disponible > cantidad:
+            return self.usuario_actual.agregar_sala_bolsa(sala, cantidad)
+        else:
+            raise CantidadNoDisponible("no se puede agregar esta cantidad del producto solo "
+                                       f"hay {sala.cantidad_disponible} unidades disponibles")
 
     def mostrar_items_bolsa(self):
         return self.usuario_actual.bolsa.items
