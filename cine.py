@@ -112,6 +112,9 @@ class Usuario:
     def vaciar_bolsa(self):
         self.bolsa.vaciar_bolsa()
 
+
+
+
 class Cine:
 
     def __init__(self):
@@ -265,10 +268,8 @@ class Cine:
         self.usuario_actual.items_bolsa()
         print(self.usuario_actual.bolsa.items)
 
-
     def vaciar_bolsa(self):
         self.usuario_actual.vaciar_bolsa()
-
     def comestible_mas_caro(self):
         comestibles = list(self.comestibles.values())
         mas_caro = comestibles[0]
@@ -285,11 +286,43 @@ class Cine:
                 mas_barato = comestible
         return mas_barato
 
+    def lista_salas(self):
+        lista = []
+        peliculas = list(self.peliculas.values())
+        for pelicula in peliculas:
+            for peli in pelicula.salas:
+                lista.append(peli)
+        return lista
+
+    def sala_mas_cara(self):
+        lista = self.lista_salas()
+        mas_cara = lista[0]
+        for sala in lista:
+            if mas_cara.precio_unitario < sala.precio_unitario:
+                mas_cara = sala
+
+        return mas_cara
+
+    def sala_mas_barata(self):
+        lista = self.lista_salas()
+        mas_barata = lista[0]
+        for sala in lista:
+            if mas_barata.precio_unitario > sala.precio_unitario:
+                mas_barata = sala
+
+        return mas_barata
+
+
     def estadisticas(self):
 
         comestible_mas_caro = self.comestible_mas_caro()
         comestible_mas_barato = self.comestible_mas_barato()
-        return (comestible_mas_caro.nombre, comestible_mas_caro.precio_unitario),(comestible_mas_caro.nombre, comestible_mas_barato.precio_unitario)
+        sala_mas_cara = self.sala_mas_cara()
+        sala_mas_barata = self.sala_mas_barata()
+        return (comestible_mas_caro.nombre, comestible_mas_caro.precio_unitario),\
+               (comestible_mas_caro.nombre, comestible_mas_barato.precio_unitario),\
+               (sala_mas_cara.pelicula.nombre, sala_mas_cara.precio_unitario),\
+               (sala_mas_barata.pelicula.nombre, sala_mas_barata.precio_unitario)
 
 
 

@@ -344,7 +344,7 @@ class Principal(QDialog):
                 mensaje_ventana = QMessageBox(self)
                 mensaje_ventana.setWindowTitle("Error")
                 mensaje_ventana.setIcon(QMessageBox.Warning)
-                mensaje_ventana.setText("debe seleccionar un comestible")
+                mensaje_ventana.setText("debe seleccionar una sala")
                 mensaje_ventana.setStandardButtons(QMessageBox.Ok)
                 mensaje_ventana.exec()
 
@@ -409,13 +409,12 @@ class Principal(QDialog):
 
     def vaciar_bolsa(self):
 
-        selection_model = self.tableView.selectionModel()
         modelo = self.tableView.model()
         for indice in self.cine.usuario_actual.bolsa.items:
             modelo.removeRow(0)
 
+
     def abrir_comprar_bolsa(self):
-        self.vaciar_bolsa()
         total = self.cine.calucular_total()
         mensaje = self.cine.mensaje_descuento(total)
         mensaje_ventana = QMessageBox(self)
@@ -424,6 +423,9 @@ class Principal(QDialog):
         mensaje_ventana.setStandardButtons(QMessageBox.Ok)
         mensaje_ventana.exec()
         self.cine.descontar_unidades()
+        self.vaciar_bolsa()
+        self.lineEdit.setText("")
+
 
 
     def estadisticas(self):
@@ -433,7 +435,8 @@ class Principal(QDialog):
         mensaje_ventana.setText(f"""
         comestible mas caro = {mensaje[0][0]} su precio es {mensaje[0][1]}
         comestible mas barato = {mensaje[1][0]} su precio es {mensaje[1][1]}       
-
+        sala mas cara = {mensaje[2][0]} su precio es {mensaje[2][1]}
+        sala mas barata = {mensaje[3][0]} su precio es {mensaje[3][1]}
 """)
         mensaje_ventana.setStandardButtons(QMessageBox.Ok)
         mensaje_ventana.exec()
