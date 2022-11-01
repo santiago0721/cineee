@@ -41,7 +41,7 @@ class Pelicula:
 class Sala:
 
     def __init__(self, hora: str, precio_boleta: float, pelicula: Pelicula):
-        self.asientos =  []
+        self.cantidad_disponible = 20
         self.hora: str = hora
         self.precio_unitario: float = precio_boleta
         self.pelicula: Pelicula = pelicula
@@ -72,8 +72,19 @@ class Bolsa:
         self.items.append(item)
         return item
 
+    def total(self):
+        total = 0
+        for objeto in self.items:
+            total += objeto.cantidad * objeto.producto.precio_unitario
+        return total
 
+    def eliminar(self, indice):
+        self.items.pop(indice)
 
+    def descontar_items_bolsa(self):
+        for item in self.items:
+            item.producto.cantidad_disponible -= item.cantidad
+            print(item.producto.cantidad_disponible)
 
 class Usuario:
     def __init__(self, cedula: str, nombre: str, clave: str):
@@ -85,6 +96,14 @@ class Usuario:
     def agregar_comestible_bolsa(self, comestible: Comestible, cantidad: int):
         self.bolsa.agregar_item(comestible, cantidad)
 
+    def total(self):
+        return self.bolsa.total()
+
+    def eliminar_item_bolsa(self, indice):
+        self.bolsa.eliminar(indice)
+
+    def items_bolsa(self):
+        self.bolsa.descontar_items_bolsa()
 
 class Cine:
 
@@ -135,26 +154,22 @@ class Cine:
 
 
     def agregar_comestibles_bolsa(self, comestible, cantidad: int):
-
-        return self.usuario_actual.agregar_comestible_bolsa(comestible, cantidad)
-
+        if comestible.cantidad_disponible > cantidad:
+            return self.usuario_actual.agregar_comestible_bolsa(comestible, cantidad)
+        else:
+            raise CantidadNoDisponible("no se puede agregar esta cantidad del producto solo "
+                                       f"hay {comestible.cantidad_disponible} unidades disponibles")
 
     def mostrar_items_bolsa(self):
         return self.usuario_actual.bolsa.items
 
-    def mostrar_comestibles_disponibles(self) -> list:
-        lista: list = []
-        for objeto in self.comestibles.items():
-            lista.append(objeto)
-        return lista
 
     def eliminar_item(self, indice: int):
-        self.usuario_actual.bolsa.items.pop(indice)
+        self.usuario_actual.eliminar_item_bolsa(indice)
+
 
     def calucular_total(self):
-        total = 0
-        for objeto in self.usuario_actual.bolsa.items:
-            total += objeto.cantidad * objeto.producto.precio_unitario
+        total = self.usuario_actual.total()
         return total
 
 
@@ -173,12 +188,22 @@ class Cine:
         with open ("datos/comestibles", encoding="utf8", mode="a") as file:
             file.write(f"\n{nombre}|{cantidad_disponible}|{precio_unitario}")
 
+    def guardar_nueva_pelicula(self, nombre: str, duracion: str, genero: str):
+        with open ("datos/peliculas", encoding="utf8", mode="a") as file:
+            file.write(f"\n{nombre}|{duracion}|{genero}")
     def agregar_nuevo_comestible(self,nombre:str,cantidad_disponible:str, precio_unitario:str):
         if nombre == "" or cantidad_disponible == "" or precio_unitario == "":
             raise EspaciosSinRellenar("debe lllenar todos los datos")
 
         else:
             self.guardar_nuevo_comestible(nombre, int(cantidad_disponible), float(precio_unitario))
+
+    def agregar_nueva_pelicula(self,nombre:str,duracion:str, genero:str):
+        if nombre == "" or duracion == "" or genero == "":
+            raise EspaciosSinRellenar("debe lllenar todos los datos")
+
+        else:
+            self.guardar_nueva_pelicula(nombre, duracion, genero)
 
     def cargar_datos_usuarios(self):
         with open("datos/usuarios", encoding="utf8") as file:
@@ -189,12 +214,8 @@ class Cine:
     def cargar_datos_salas(self):
         with open("datos/salas", encoding="utf8") as file:
             for linea in file:
-                info = linea.split("|")#hacer un for para comparar con el nombre cual peli es y obtener la peli
-                pelicula = Pelicula(info[2], info[3], info[4])
-                self.peliculas[info[2]].salas.append(Sala(info[0], float(info[1]), pelicula))
-
-                #mejorarlo por que por ahora sobre escribe el mismo objeto en el diccionario
-
+                info = linea.split("|")
+                self.peliculas[info[2]].salas.append(Sala(info[0], float(info[1]), self.peliculas[info[2]]))
 
     def agregar_usuario_archivo(self, cedula: str, nombre: str, clave: str):
         with open ("datos/usuarios", encoding="utf8", mode="a") as file:
@@ -211,6 +232,26 @@ class Cine:
         else:
             pelicula.crear_sala(hora, precio_boleta)
             self.agregar_sala_archivo(hora, precio_boleta, pelicula)
+
+    def descuento(self, total):
+        if total >= 150000:
+            return 15, total * 0.85
+        else:
+            return 10, total * 0.9
+    def mensaje_descuento(self, total):
+        if total > 90000:
+            cantidad, valor = self.descuento(total)
+            return f""" 
+            el valor total de la compra es de {total} 
+            se realizo un descuento de {cantidad} %
+            el valor a pagar es {valor}"""
+        else:
+            return f"el valor a pagar es {total}"
+
+    def descontar_unidades(self):
+        self.usuario_actual.items_bolsa()
+
+
 
 
 

@@ -23,6 +23,6 @@ class EspaciosSinRellenar(CineError):
         super().__init__(mensaje)
 
 
-class NoEsNumero(CineError):
+class CantidadNoDisponible(CineError):
     def __init__(self, mensaje):
         super().__init__(mensaje)
