@@ -67,6 +67,7 @@ class InicioSesion(QMainWindow):
 
     def abrir_ventana_registro(self):
         self.registro.exec()
+        self.__limpiar()
 
     def inicio_admin(self):
         if self.Txt_clave.text() != "":
