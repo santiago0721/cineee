@@ -111,7 +111,7 @@ class Registro(QDialog):
                 cedula = self.Txt_cedula.text()
                 nombre = self.Txt_nombre.text()
                 clave = self.Txt_contrasena.text()
-                self.principal[0].registrar_usuario(cedula, clave, nombre)
+                self.principal[0].registrar_usuario(cedula, nombre, clave)
                 self.__limpiar()
 
                 mensaje_ventana = QMessageBox(self)

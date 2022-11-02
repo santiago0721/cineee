@@ -146,6 +146,7 @@ class Cine:
             return None
 
     def iniciar_sesion_usuario(self, cedula: str, clave: str):
+
         if cedula == "" or clave == "":
             raise EspaciosSinRellenar("debe lllenar todos los datos del ingreso")
         if cedula in self.usuarios.keys():
@@ -229,7 +230,7 @@ class Cine:
         with open("datos/usuarios", encoding="utf8") as file:
             datos = csv.reader(file, delimiter="|")
             usuarios = map(lambda data: Usuario(data[0], data[1], data[2]), datos)
-            self.usuarios = {usuario.clave: usuario for usuario in usuarios}
+            self.usuarios = {usuario.cedula: usuario for usuario in usuarios}
 
     def cargar_datos_salas(self):
         with open("datos/salas", encoding="utf8") as file:
@@ -324,7 +325,7 @@ class Cine:
         sala_mas_cara = self.sala_mas_cara()
         sala_mas_barata = self.sala_mas_barata()
         return (comestible_mas_caro.nombre, comestible_mas_caro.precio_unitario),\
-               (comestible_mas_caro.nombre, comestible_mas_barato.precio_unitario),\
+               (comestible_mas_barato.nombre, comestible_mas_barato.precio_unitario),\
                (sala_mas_cara.pelicula.nombre, sala_mas_cara.precio_unitario),\
                (sala_mas_barata.pelicula.nombre, sala_mas_barata.precio_unitario)
 
